@@ -1,5 +1,6 @@
 import csv
 
+from trueskill.trueskill import Rating, quality_1vs1, rate_1vs1
 
 #utility functions
 def readCSV(fileName):
@@ -98,6 +99,7 @@ for competition in competitions:
 		winner2 = competition['red2']
 		loser1 = competition['blue1']
 		loser2 = competition['blue2']
+
 	else:
 		blueWins += 1
 		winner1 = competition['blue1']
@@ -139,12 +141,6 @@ print 'ROBOT NAME, WINS'
 print '----------'
 print '\n'.join([str(item) for item in winsByRobotSorted])
 
-skillLevelByRobotSorted = skillLevelByRobot.items()
-skillLevelByRobotSorted.sort(key=lambda row:row[1], reverse=True)
-columns = [winsByRobot, lossesByRobot, skillLevelByRobot, uncertaintyByRobot];
-print ''
-print 'ROBOT NAME, WINS, LOSSES, SKILL LEVEL, UNCERTAINTY'
-print '\n'.join([joinColumns(row[0], columns) for row in skillLevelByRobotSorted])
 
 lossesByRobotSorted = lossesByRobot.items()
 lossesByRobotSorted.sort(key=lambda row:row[1], reverse=True)
@@ -152,3 +148,15 @@ print ''
 print 'ROBOT NAME, LOSSES'
 print '----------'
 print '\n'.join([str(item) for item in lossesByRobotSorted])
+
+skillLevelByRobotSorted = skillLevelByRobot.items()
+skillLevelByRobotSorted.sort(key=lambda row:row[1], reverse=True)
+columns = [winsByRobot, lossesByRobot, skillLevelByRobot, uncertaintyByRobot];
+print ''
+print 'ROBOT NAME, WINS, LOSSES, SKILL LEVEL, UNCERTAINTY'
+print '\n'.join([joinColumns(row[0], columns) for row in skillLevelByRobotSorted])
+
+alice, bob = Rating(25), Rating(30)  # assign Alice and Bob's ratings
+if quality_1vs1(alice, bob) < 0.50:
+    print('This match seems to be not so fair')
+alice, bob = rate_1vs1(alice, bob)  # update the ratings after the matchq
